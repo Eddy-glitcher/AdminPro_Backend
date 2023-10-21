@@ -1,9 +1,8 @@
 // Este modelo tiene como objetivo ponerle restricciones a mi base de datos para que cada registro de la base de datos luzca como yo quiero
-
-const {Schema, model} = require('mongoose')
+const {Schema, model} = require('mongoose');
 
 // Definicion del modelo db
-const UserSchema = Schema({
+const UserSchema = new Schema({
     name : {
         type : String,
         required: true
@@ -31,5 +30,14 @@ const UserSchema = Schema({
     }
 });
 
+// Podemos renombrar propiedades del modelo desde aquí
+UserSchema.method('toJSON', function(){
+    const { __v, _id, ...object} = this.toObject(); // Traemos la instancia del objecto UserSchema
+
+    object.uid = _id; // Con esto cambiamos el identificados de los ids para los usuarios, pero solo es visual, no afecta la base de datos.
+    return object;
+});
+
+
 // Exportamos el esquema y lo nombramos como Users, si no le mandamos el nombre, mongo le asigna el plural automáticamente.
-module.exports.model('Users', UserSchema);
+module.exports = model('Users', UserSchema);
