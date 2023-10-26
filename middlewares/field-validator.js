@@ -1,4 +1,5 @@
 // Con este middleware validamos que los campos requeridos que recibimos en la ruta POST /api/users, se reciban correctamente 
+// Los middleware son como cualquier otro controlador, con la diferencia de que utilizan el método next.
 
 const { response } = require('express');
 // Importamos el express validator

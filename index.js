@@ -4,6 +4,7 @@ const cors = require('cors'); // Los coors son paquetes que permiten que mis end
 
 // Rutas para los usuarios de la aplicacion. 
 const {userRouter} = require('./routes/users.routes'); 
+const {authRouter} = require('./routes/auth.routes'); 
 
 const { dbConnection } = require('./database/config'); // Importamos la configuración que me conecta node con mongo
 
@@ -21,6 +22,7 @@ dbConnection();
 // Rutas de la Aplicación
 // Las rutas las enlazamos con un midleware
 app.use('/api/users', userRouter );
+app.use('/api/login', authRouter );
 
 // Escuchamos peticiones al puerto especificado
 app.listen( process.env.PORT, ()=> {

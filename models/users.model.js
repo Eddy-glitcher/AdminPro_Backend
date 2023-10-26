@@ -32,7 +32,7 @@ const UserSchema = new Schema({
 
 // Podemos renombrar propiedades del modelo desde aquí
 UserSchema.method('toJSON', function(){
-    const { __v, _id, ...object} = this.toObject(); // Traemos la instancia del objecto UserSchema
+    const { __v, _id, password, ...object} = this.toObject(); // Traemos la instancia del objecto UserSchema
 
     object.uid = _id; // Con esto cambiamos el identificados de los ids para los usuarios, pero solo es visual, no afecta la base de datos.
     return object;
