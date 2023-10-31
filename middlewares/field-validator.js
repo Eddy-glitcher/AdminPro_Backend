@@ -12,8 +12,8 @@ const fieldValidator = (req , res= response , next)=>{ // si el middleware pasa 
         return res.status(400).json({
             ok: false,
             errors : errors.mapped() // mapemaos los errores
-        })
-    }
+        });
+    };
 
     // Llegados a este punto no hay errores.
     next();

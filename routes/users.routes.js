@@ -3,10 +3,7 @@ const { Router } = require('express');
 const { check } = require('express-validator'); // paquete en el cual tenemos el check
 
 // Importamos el controlador de la ruta para obtener los usuarios
-const {getUsers} = require('../controllers/user.controller'); 
-const {createUser} = require('../controllers/user.controller'); 
-const {updateUser} = require('../controllers/user.controller'); 
-const {deleteUser} = require('../controllers/user.controller'); 
+const {getUsers, createUser, updateUser, deleteUser} = require('../controllers/user.controller'); 
 // Importamos el middleware para las validaciones
 const { fieldValidator } = require('../middlewares/field-validator');
 const { validateJwt } = require('../middlewares/validate-jwt');

@@ -1,4 +1,4 @@
-const UserSchema  = require('../models/users.model');
+const UserSchema  = require('../models/user.model');
 // importamos las ayudas de tipados para las respuestas del back
 const { response } = require('express');
 // Importamos el metodo para encriptar contraseñas con bcrypt
@@ -6,16 +6,32 @@ const bcrypt = require('bcryptjs');
 const {generateJwt} = require('../helpers/jwt.helper');
 
 const getUsers = async(req,res = response)=>{
-    try {
-        const users = await UserSchema.find({}, 'name email role google');
 
-        res.status(400).json({
+    // Listamos los usuarios desde un numero en adelante
+    const listUsersFrom = Number(req.query.from) || 0; // si no recibimos el parámetro los listamos desde el 0
+    try {
+        // Con esto ejecutamos varios procesos asincronos, pero esperando a que se completen todos para que se pueda continuar. Se retorna un arreglo.
+        const [ users, listUsersTotal ] = await Promise.all([
+                //    Aplicamos la paginación de los usuarios
+        UserSchema.find({}, 'name email role google image')
+                    .skip(listUsersFrom)
+                    .limit(5),
+                // Listo los usuarios desde el numero que recibo
+        
+        // Podemos retornar la cantidad de usuarios que tenemos en la db
+        UserSchema.countDocuments()
+
+        ]);
+
+        return res.status(400).json({
             ok : true,
             users,
-            uid : req.uid
+            uid : req.uid,
+            users,
+            listUsersTotal
         });
     } catch (error) {
-        res.status(404).json({
+        return res.status(404).json({
             ok : false,
             error
         });
@@ -49,7 +65,7 @@ const createUser = async(req,res = response)=>{
 
     const userToken = await generateJwt(user.id); // Esperamos que genere el Token antes de lanzar el mensaje.
 
-    res.status(400).json({
+    return res.status(400).json({
         ok : true,
         msj: 'Usuario Creado con Exito',
         user,
@@ -59,7 +75,7 @@ const createUser = async(req,res = response)=>{
     } catch (error) {
         console.log(error);
 
-        res.status(500).json({
+        return res.status(500).json({
             ok : false,
             msj : 'Error inesperado... revisar Logs'
         });
@@ -77,7 +93,7 @@ const updateUser = async(req, res = response)=>{
         const dbUser = await UserSchema.findById(uid);
     
         if(!dbUser){
-            res.status(404).json({
+            return res.status(404).json({
                 ok : false,
                 msj : 'Usuario no Existe'
             });
@@ -104,7 +120,7 @@ const updateUser = async(req, res = response)=>{
         const updatedUser = await UserSchema.findByIdAndUpdate(uid, userData, {new: true});
         // Actualizamos el usuario con el id correspondiente y retornamos usuario actualizado.
 
-        res.status(200).json({
+        return res.status(200).json({
             ok : true,
             msj : 'Usuario Actualizado',
             user: updatedUser
@@ -113,7 +129,7 @@ const updateUser = async(req, res = response)=>{
     } catch (error) {
         console.log(error);
 
-        res.status(500).json({
+        return res.status(500).json({
             ok: false,
             msj: 'Error Inesperado en la Actualizacion, Intentalo Otra vez'
         })
