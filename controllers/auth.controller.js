@@ -1,9 +1,8 @@
 const {response} = require('express');
-const UserSchema = require('../models/users.model');
+const UserSchema = require('../models/user.model');
 // Importamos el metodo para encriptar contraseñas con bcrypt
 const bcrypt = require('bcryptjs');
 const { generateJwt } = require('../helpers/jwt.helper');
-
 
 const login = async(req, res = response)=>{
 

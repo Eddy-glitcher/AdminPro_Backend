@@ -4,7 +4,11 @@ const cors = require('cors'); // Los coors son paquetes que permiten que mis end
 
 // Rutas para los usuarios de la aplicacion. 
 const {userRouter} = require('./routes/users.routes'); 
+const {hospitalsRouter} = require('./routes/hospitals.routes'); 
+const {doctorsRouter} = require('./routes/doctors.routes'); 
 const {authRouter} = require('./routes/auth.routes'); 
+const {searchRouter} = require('./routes/search.routes'); 
+const { uploadRouter } = require('./routes/upload.routes');
 
 const { dbConnection } = require('./database/config'); // Importamos la configuración que me conecta node con mongo
 
@@ -22,6 +26,10 @@ dbConnection();
 // Rutas de la Aplicación
 // Las rutas las enlazamos con un midleware
 app.use('/api/users', userRouter );
+app.use('/api/hospitals', hospitalsRouter );
+app.use('/api/doctors', doctorsRouter );
+app.use('/api/all', searchRouter );
+app.use('/api/uploads', uploadRouter );
 app.use('/api/login', authRouter );
 
 // Escuchamos peticiones al puerto especificado
